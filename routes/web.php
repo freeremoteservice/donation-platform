@@ -9,7 +9,9 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AdminMiddleware;
-
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CampaignController as AdminCampaignController;
 
 // Redirect root to login or dashboard
 Route::redirect('/', '/login');
@@ -26,15 +28,18 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     // Admin routes protected by AdminMiddleware
-    Route::middleware([AdminMiddleware::class])->group(function () {
-        Route::get('/admin', fn () => Inertia::render('Admin/Dashboard'))->name('admin.dashboard');
-    });
+    Route::middleware([AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // // Admin routes, restricted by AdminMiddleware
-    // Route::middleware([AdminMiddleware::class])->group(function () {
-    //     Route::get('/admin', fn () => Inertia::render('Admin/Dashboard'))->name('admin.dashboard');
-    //     // Add more admin routes here
-    // });
+        // User management
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+
+        // Campaign management
+        Route::get('/campaigns', [AdminCampaignController::class, 'index'])->name('campaigns.index');
+        Route::put('/campaigns/{campaign}', [AdminCampaignController::class, 'update'])->name('campaigns.update');
+        Route::delete('/campaigns/{campaign}', [AdminCampaignController::class, 'destroy'])->name('campaigns.destroy');
+    });
 
     // Campaign routes
     Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
