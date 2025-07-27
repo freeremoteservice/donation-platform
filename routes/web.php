@@ -1,41 +1,27 @@
 <?php
 
 use Illuminate\Foundation\Application;
-use App\Models\Campaign;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Campaign;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\AdminMiddleware;
 
-// Already in your file:
-// use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect('/campaigns');
 });
 
-
+// Authenticated routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
-    // Breeze profile routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Show list of all campaigns
+    // Campaign listing
     Route::get('/campaigns', fn () =>
         Inertia::render('CampaignList', [
-            // 'campaigns' => Campaign::all() // enable after model is ready
+            // 'campaigns' => Campaign::all() // Enable when Campaign model is ready
         ])
     )->name('campaigns.index');
 
-    // Campaign detail view
+    // Campaign detail
     Route::get('/campaigns/{id}', function ($id) {
         return Inertia::render('CampaignDetail', [
             'id' => $id,
@@ -51,12 +37,26 @@ Route::middleware(['auth'])->group(function () {
         ]);
     })->name('donations.create');
 
-    // Authenticated user's donations
+    // My donations
     Route::get('/my-donations', fn () =>
         Inertia::render('MyDonations', [
-            // 'donations' => auth()->user()->donations // enable after model is ready
+            // 'donations' => auth()->user()->donations // Enable when Donation model is ready
         ])
     )->name('donations.mine');
+
+    // Breeze: Profile management
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::middleware([
+        'auth',
+        AdminMiddleware::class,
+    ])->group(function () {
+        Route::get('/admin', fn () =>
+            Inertia::render('Admin/Dashboard')
+        )->name('admin.dashboard');
+    });
 });
 
 require __DIR__.'/auth.php';

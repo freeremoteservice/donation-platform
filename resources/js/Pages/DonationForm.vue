@@ -1,36 +1,21 @@
-<script setup>
-defineProps(['id', 'campaign']);
-</script>
-
 <template>
-  <div class="p-6 max-w-md">
-    <h1 class="text-2xl font-bold mb-4">Donate to {{ campaign.title }}</h1>
-
+  <div>
+    <h1 class="text-2xl font-bold mb-4">Donate to Campaign</h1>
+    <p>You're donating to: {{ campaign.name }}</p>
+    <!-- Placeholder form -->
     <form @submit.prevent="submitDonation">
-      <label class="block mb-2">
-        <span class="text-gray-700">Amount</span>
-        <input v-model="amount" type="number" min="1" class="mt-1 block w-full border px-3 py-2 rounded" />
-      </label>
-
-      <button type="submit" class="mt-4 bg-green-600 text-white px-4 py-2 rounded">
-        Confirm Donation
-      </button>
+      <input v-model="amount" type="number" placeholder="Amount" class="border p-2 mb-2 block" />
+      <button class="bg-blue-500 text-white px-4 py-2">Donate</button>
     </form>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
+defineProps(['campaign'])
+const amount = ref(0)
 
-export default {
-  setup() {
-    const amount = ref(0)
-
-    function submitDonation() {
-      alert(`You donated $${amount.value}! (Backend handling coming soon)`)
-    }
-
-    return { amount, submitDonation }
-  },
+function submitDonation() {
+  alert(`Donation of $${amount.value} to ${campaign.name} submitted.`)
 }
 </script>
