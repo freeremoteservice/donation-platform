@@ -42,6 +42,9 @@ class CampaignController extends Controller
     {
         $campaign = Campaign::with(['creator', 'donations.user'])->findOrFail($id);
 
+        $campaign->total_donated = $campaign->donations->sum('amount');
+        $campaign->donations_count = $campaign->donations->count();
+
         return Inertia::render('Campaigns/Show', [
             'campaign' => $campaign,
         ]);

@@ -39,11 +39,14 @@
   import { ref } from 'vue'
   import { Link, usePage } from '@inertiajs/vue3'
   import { Inertia } from '@inertiajs/inertia'
-  
+  import Layout from '@/Layouts/Layout.vue'
+
+  defineOptions({ layout: Layout })
+
   const page = usePage()
   const campaigns = page.props.campaigns
   const authUserId = page.props.auth.user?.id
-  
+
   const deleteCampaign = (id) => {
     if (confirm('Are you sure you want to delete this campaign?')) {
       Inertia.delete(route('campaigns.destroy', id))
