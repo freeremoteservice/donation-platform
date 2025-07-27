@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use App\Models\Campaign;
 use Inertia\Inertia;
+use App\Http\Controllers\ProfileController;
 
 // Already in your file:
 // use Illuminate\Support\Facades\Route;
@@ -18,6 +19,15 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    // Breeze profile routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     // Show list of all campaigns
     Route::get('/campaigns', fn () =>
         Inertia::render('CampaignList', [
@@ -48,3 +58,5 @@ Route::middleware(['auth'])->group(function () {
         ])
     )->name('donations.mine');
 });
+
+require __DIR__.'/auth.php';
