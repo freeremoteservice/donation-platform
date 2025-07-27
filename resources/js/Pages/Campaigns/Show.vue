@@ -5,7 +5,7 @@
   
       <p><strong>Goal:</strong> ${{ campaign.goal_amount }}</p>
       <p><strong>Deadline:</strong> {{ campaign.deadline }}</p>
-      <p><strong>Created by:</strong> {{ campaign.creator.name }}</p>
+      <p><strong>Created by:</strong> {{ campaign.creator?.name || 'Unknown' }}</p>
   
       <div class="mt-6">
         <Link :href="route('donations.create', campaign.id)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
