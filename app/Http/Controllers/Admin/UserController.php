@@ -18,15 +18,15 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, User $user)
-    {
-        $request->validate([
-            'role' => 'required|in:user,admin',
-        ]);
+    // public function update(Request $request, User $user)
+    // {
+    //     $request->validate([
+    //         'role' => 'required|in:user,admin',
+    //     ]);
 
-        $user->role = $request->role;
-        $user->save();
+    //     $user->role = $request->role;
+    //     $user->save();
 
-        return redirect()->back()->with('success', 'User role updated.');
-    }
+    //     return redirect()->back()->with('success', 'User role updated.');
+    // }
 }
