@@ -26,6 +26,12 @@
           <input v-model="form.deadline" type="date" class="w-full border rounded px-3 py-2" />
           <div v-if="errors.deadline" class="text-red-600 mt-1">{{ errors.deadline }}</div>
         </div>
+
+        <div class="mb-4">
+          <label class="block font-medium">Category</label>
+          <input v-model="form.category" type="text" class="w-full border rounded px-3 py-2" />
+          <div v-if="form.errors.category" class="text-red-500">{{ form.errors.category }}</div>
+        </div>
   
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           Create
@@ -37,13 +43,14 @@
 <script setup>
   import { ref } from 'vue'
   import { useForm } from '@inertiajs/vue3'
-  import { usePage } from '@inertiajs/vue3'
   
   const form = useForm({
     title: '',
     description: '',
     goal_amount: 0,
     deadline: '',
+    category: '',
+    status: 'active',
   })
   
   const errors = ref({})

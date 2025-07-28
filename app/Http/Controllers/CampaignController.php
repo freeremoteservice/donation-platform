@@ -60,11 +60,11 @@ class CampaignController extends Controller
             'goal_amount' => 'required|numeric|min:0',
             'deadline' => 'nullable|date|after_or_equal:today',
             'category' => 'required|string|max:255',
-            'status' => 'required|string|in:active,completed,cancelled',
         ]);
 
         $campaign = new Campaign($validated);
         $campaign->user_id = auth()->id();
+        $campaign->status = 'active';
         $campaign->save();
 
         return redirect()->route('campaigns.index')->with('success', 'Campaign created successfully.');
