@@ -12,6 +12,8 @@ class Campaign extends Model
         'description',
         'goal_amount',
         'deadline',
+        'category',
+        'status',
     ];
 
     public function creator()

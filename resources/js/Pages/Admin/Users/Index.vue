@@ -28,7 +28,7 @@
 </template>
   
 <script setup>
-  import { Inertia } from '@inertiajs/inertia';
+  import { router } from '@inertiajs/vue3';
   import AdminLayout from '@/Layouts/AdminLayout.vue'
 
   defineOptions({
@@ -40,7 +40,7 @@
   });
   
   function changeRole(userId, role) {
-    Inertia.put(route('admin.users.update', userId), { role });
+    router.put(route('admin.users.update', userId), { role });
   }
 </script>
   

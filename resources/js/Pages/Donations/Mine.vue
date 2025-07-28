@@ -23,7 +23,7 @@
 
 <script setup>
   import Layout from '@/Layouts/Layout.vue'
-  import { Inertia } from '@inertiajs/inertia'
+  import { router } from '@inertiajs/vue3'
 
   defineOptions({ layout: Layout })
 
@@ -41,6 +41,6 @@
   }
 
   function goToCampaign(campaignId) {
-    Inertia.visit(route('campaigns.show', campaignId))  // <-- use Inertia.visit() for navigation
+    router.visit(route('campaigns.show', campaignId))  // <-- use router.visit() for navigation
   }
 </script>

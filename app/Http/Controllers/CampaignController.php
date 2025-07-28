@@ -8,14 +8,44 @@ use Inertia\Inertia;
 
 class CampaignController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $campaigns = Campaign::with('creator')->latest()->get();
+        $query = Campaign::query()->with('creator');
+
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('created_by')) {
+            $query->whereHas('creator', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->created_by . '%');
+            });
+        }
+
+        $campaigns = $query->latest()->paginate(10)->withQueryString()->through(function ($campaign) {
+            return [
+                ...$campaign->toArray(),
+                'creator' => $campaign->creator ?? null,
+                'category' => $campaign->category ?? '',
+            ];
+        });
 
         return Inertia::render('Campaigns/Index', [
             'campaigns' => $campaigns,
+            'filters' => $request->only('title', 'category', 'status', 'created_by'),
+            'categories' => Campaign::select('category')->distinct()->pluck('category'),
+            'statuses' => Campaign::select('status')->distinct()->pluck('status'),
         ]);
     }
+
 
     public function create()
     {
@@ -29,6 +59,8 @@ class CampaignController extends Controller
             'description' => 'required|string',
             'goal_amount' => 'required|numeric|min:0',
             'deadline' => 'nullable|date|after_or_equal:today',
+            'category' => 'required|string|max:255',
+            'status' => 'required|string|in:active,completed,cancelled',
         ]);
 
         $campaign = new Campaign($validated);
@@ -78,6 +110,8 @@ class CampaignController extends Controller
             'description' => 'required|string',
             'goal_amount' => 'required|numeric|min:0',
             'deadline' => 'nullable|date|after_or_equal:today',
+            'category' => 'required|string|max:255',
+            'status' => 'required|string|in:active,completed,cancelled',
         ]);
 
         $campaign->update($validated);

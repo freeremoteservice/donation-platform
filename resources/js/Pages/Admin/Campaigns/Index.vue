@@ -31,7 +31,7 @@
 </template>
   
 <script setup>
-  import { Inertia } from '@inertiajs/inertia';
+  import { router } from '@inertiajs/vue3';
   import AdminLayout from '@/Layouts/AdminLayout.vue'
 
   defineOptions({
@@ -43,12 +43,12 @@
   });
   
   function changeStatus(campaignId, status) {
-    Inertia.put(route('admin.campaigns.update', campaignId), { status });
+    router.put(route('admin.campaigns.update', campaignId), { status });
   }
   
   function deleteCampaign(campaignId) {
     if (confirm('Are you sure you want to delete this campaign?')) {
-      Inertia.delete(route('admin.campaigns.destroy', campaignId));
+      router.delete(route('admin.campaigns.destroy', campaignId));
     }
   }
 </script>
