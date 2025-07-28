@@ -26,6 +26,22 @@
           <input v-model="form.deadline" type="date" class="w-full border rounded px-3 py-2" />
           <div v-if="errors.deadline" class="text-red-600 mt-1">{{ errors.deadline }}</div>
         </div>
+
+        <div class="mb-4">
+          <label class="block font-medium">Category</label>
+          <input v-model="form.category" type="text" class="w-full border rounded px-3 py-2" />
+          <div v-if="errors.category" class="text-red-600 mt-1">{{ errors.category }}</div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block font-medium">Status</label>
+          <select v-model="form.status" class="w-full border rounded px-3 py-2">
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <div v-if="errors.status" class="text-red-600 mt-1">{{ errors.status }}</div>
+        </div>
   
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
           Update
@@ -47,6 +63,8 @@
     description: campaign.description,
     goal_amount: campaign.goal_amount,
     deadline: campaign.deadline || '',
+    category: campaign.category,
+    status: campaign.status,
   })
   
   const errors = ref({})
