@@ -8,8 +8,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Campaign;
+use App\Models\Donation;
 
 class ProfileController extends Controller
 {
@@ -18,9 +21,14 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
+
         return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
+            'authUser' => $user,
+            'userDonations' => $user->donations()->with('campaign')->latest()->get(),
+            'userCampaigns' => $user->campaigns()->latest()->get(),
         ]);
     }
 
@@ -29,15 +37,26 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $data = $request->validated();
+
+        // Handle password update if provided
+        if (!empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
         }
 
-        $request->user()->save();
+        // Reset email verification if email has changed
+        if (isset($data['email']) && $user->email !== $data['email']) {
+            $user->email_verified_at = null;
+        }
 
-        return Redirect::route('profile.edit');
+        // Update user
+        $user->update($data);
+
+        return Redirect::route('profile.edit')->with('success', 'Profile updated.');
     }
 
     /**

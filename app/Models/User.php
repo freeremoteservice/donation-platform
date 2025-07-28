@@ -49,7 +49,7 @@ class User extends Authenticatable
 
     public function campaigns()
     {
-        return $this->hasMany(Campaign::class);
+        return $this->hasMany(Campaign::class, 'user_id');
     }
 
     public function donations()
