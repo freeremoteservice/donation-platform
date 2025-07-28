@@ -6,7 +6,7 @@
         <!-- Brand and desktop nav -->
         <div class="flex items-center space-x-4">
           <div class="hidden sm:flex space-x-4">
-            <NavLink href="/admin">Dashboard</NavLink>
+            <NavLink href="/admin" exact>Dashboard</NavLink>
             <NavLink href="/admin/users">Users</NavLink>
             <NavLink href="/admin/campaigns">Campaigns</NavLink>
           </div>
