@@ -15,10 +15,10 @@
             <td class="border p-2">{{ campaign.title }}</td>
             <td class="border p-2">{{ campaign.creator.name }}</td>
             <td class="border p-2">
-              <select :value="campaign.status" @change="changeStatus(campaign.id, $event.target.value)" class="border rounded px-2 py-1">
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
+              <select :value="campaign.status" @change="changeStatus(campaign.id, $event.target.value)" class="border rounded px-2 py-1 text-sm w-full bg-white">
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
               </select>
             </td>
             <td class="border p-2">

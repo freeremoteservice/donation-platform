@@ -21,7 +21,7 @@ class CampaignController extends Controller
     public function update(Request $request, Campaign $campaign)
     {
         $request->validate([
-            'status' => 'required|in:pending,approved,rejected',
+            'status' => 'required|in:active,completed,cancelled',
         ]);
 
         $campaign->status = $request->status;
